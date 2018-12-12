@@ -26,9 +26,8 @@ public class ObjectiveFunction{
 	//private int deployedSensors;
 	
 	
-	public ObjectiveFunction(SensorsProblem problem, Solution solution) {
+	public ObjectiveFunction(SensorsProblem problem) {
 		this.problem = problem;
-		this.solution = new SensorsSolution(solution);
 		this.sfDim = this.problem.getSfDimensions();
 		this.sensingRadius = this.problem.getsInf().getSensingRadius();
 		this.commRadius = this.problem.getsInf().getCommRadius();

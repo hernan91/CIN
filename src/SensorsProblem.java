@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
@@ -16,7 +15,7 @@ public class SensorsProblem implements Problem{
 	private SensorInformation sInf;
 	private ArrayList<Location> energyPoints;
 	private int maxSensors;
-	public static String attrName = "arrayLocations";
+	//public static String attrName = "arrayLocations";
 
 	
 	public SensorsProblem(SensorsFieldDimensions sfDimensions, Location hecnLocation, ArrayList<Location> energyPoints,
@@ -32,14 +31,13 @@ public class SensorsProblem implements Problem{
 	public Solution newSolution() {
 		Solution solution = new Solution(getNumberOfVariables(), getNumberOfObjectives(), getNumberOfConstraints());
 		solution.setVariable(0, EncodingUtils.newBinary(maxSensors));
-		ArrayList<Location> arrayLocations = new ArrayList<>();
-		Random random = new Random();
-		for(int i=0; i<maxSensors; i++) {
-			int locX = random.nextInt(sfDimensions.getGridSizeX());
-			int locY = random.nextInt(sfDimensions.getGridSizeY());
-			arrayLocations.add(new Location(locX, locY));
+		for(int i=1; i<=getNumberOfVariables(); i=i+2) {
+			if(i==101) {
+				System.err.println("Hola");
+			}
+			solution.setVariable(i, EncodingUtils.newInt(0, sfDimensions.getGridSizeX()));
+			solution.setVariable(i+1, EncodingUtils.newInt(0, sfDimensions.getGridSizeY()));
 		}
-		solution.setAttribute(SensorsProblem.attrName, arrayLocations);
 		return solution;
 	}
 	
@@ -48,7 +46,7 @@ public class SensorsProblem implements Problem{
 		SensorsSolution sensorsSolution = new SensorsSolution(solution);
 		// compute the active sensors
 		int numberOfDeployedSensors = sensorsSolution.getNumberOfDeployedSensors();
-		ObjectiveFunction objFunc = new ObjectiveFunction(this, solution);
+		ObjectiveFunction objFunc = new ObjectiveFunction(this);
 		double[] coverageEnergy = objFunc.sensorCoverageEnergy(sensorsSolution);
 
 		// uncovered region
@@ -132,7 +130,7 @@ public class SensorsProblem implements Problem{
 
 	@Override
 	public int getNumberOfVariables() {
-		return 1;
+		return getMaxSensors()*2+1;
 	}
 
 	@Override

@@ -22,19 +22,15 @@ public class SensorsSolution{
 	
 	//Hay que cambiarla para que tome 
 	private void generateSensorsArrayList(){
-		Object attribute = solution.getAttribute(SensorsProblem.attrName);
 		ArrayList<Sensor> sensorsList = new ArrayList<>();
-		if(attribute instanceof ArrayList<?>) {
-			@SuppressWarnings("unchecked")
-			ArrayList<Location> locationsList = (ArrayList<Location>) attribute;
-			for(int i=0; i<locationsList.size(); i++) {
-				Location loc = locationsList.get(i);
-				sensorsList.add(new Sensor(loc, getStatusArray()[i]));
-			}
-			this.sensorsList = sensorsList;
-		}
-		else {
-			System.err.println("No se pudo castear el atributo del hashmap");
+		boolean[] statuses = EncodingUtils.getBinary(solution.getVariable(0));
+		for(int i=1; i<=solution.getNumberOfVariables(); i=i+2) {
+			int x = EncodingUtils.getInt(solution.getVariable(i));
+			int y = EncodingUtils.getInt(solution.getVariable(i+1));
+			Location location = new Location(x,y);
+			boolean status = statuses[i-1];
+			Sensor sensor = new Sensor(location, status);
+			sensorsList.add(sensor);
 		}
 	}
 	
@@ -60,9 +56,8 @@ public class SensorsSolution{
 	}
 	
 	//Todos los indices se manejan como si fuese un array de Locations, se arranca en 0.
-	
-	/**
-	 * public Location getLocation(int pos) {
+
+	public Location getLocation(int pos) {
 		Integer posX = EncodingUtils.getInt(solution.getVariable(1+pos*2));
 		Integer posY = EncodingUtils.getInt(solution.getVariable(1+pos*2+1));
 		return new Location(posX, posY);
@@ -104,5 +99,4 @@ public class SensorsSolution{
 		}
 		return locations;
 	}
-	*/
 }
