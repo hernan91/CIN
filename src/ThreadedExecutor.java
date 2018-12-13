@@ -46,7 +46,7 @@ public class ThreadedExecutor implements Callable<ThreadOutputData> {
 			.withAlgorithm(algName)
 			.withProblemClass(SensorsProblem.class, sfDim, RunData.hecnLocation, RunData.energyPoints, RunData.sInf, RunData.maxSensors)
 			.withProperty("populationSize", RunData.popSize)
-			.withProperty("operator", operators) //sbx+hux+pm+bf   "hux+bf"
+			.withProperty("hux+bf", operators) //sbx+hux+pm+bf   "hux+bf"
 			.withProperty("hux.rate", cpRate)
 			.withProperty("bf.rate", mpRate)
 			.withProgressListener(progressListener);
