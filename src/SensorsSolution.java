@@ -22,16 +22,23 @@ public class SensorsSolution{
 	
 	//Hay que cambiarla para que tome 
 	private void generateSensorsArrayList(){
+		SensorsVar sensorsLocations = null;
+		try {
+			sensorsLocations = (SensorsVar) solution.getVariable(1);
+		}
+		catch(ClassCastException ex) {
+			System.err.println("No se pudo castear SensorsVar");
+			ex.printStackTrace();
+			System.exit(0);
+		}
 		ArrayList<Sensor> sensorsList = new ArrayList<>();
 		boolean[] statuses = EncodingUtils.getBinary(solution.getVariable(0));
-		for(int i=1; i<=solution.getNumberOfVariables(); i=i+2) {
-			int x = EncodingUtils.getInt(solution.getVariable(i));
-			int y = EncodingUtils.getInt(solution.getVariable(i+1));
-			Location location = new Location(x,y);
-			boolean status = statuses[i-1];
-			Sensor sensor = new Sensor(location, status);
+		Location[] locations = sensorsLocations.getLocations();
+		for(int i=0; i<statuses.length; i++) {
+			Sensor sensor = new Sensor(locations[i], statuses[i]);
 			sensorsList.add(sensor);
 		}
+		this.sensorsList = sensorsList;
 	}
 	
 	private boolean[] getStatusArray() {
@@ -57,15 +64,15 @@ public class SensorsSolution{
 	
 	//Todos los indices se manejan como si fuese un array de Locations, se arranca en 0.
 
-	public Location getLocation(int pos) {
-		Integer posX = EncodingUtils.getInt(solution.getVariable(1+pos*2));
-		Integer posY = EncodingUtils.getInt(solution.getVariable(1+pos*2+1));
-		return new Location(posX, posY);
-	}
+//	public Location getLocation(int pos) {
+//		Integer posX = EncodingUtils.getInt(solution.getVariable(1+pos*2));
+//		Integer posY = EncodingUtils.getInt(solution.getVariable(1+pos*2+1));
+//		return new Location(posX, posY);
+//	}
 
-	public int numberOfVariables() {
-		return solution.getNumberOfVariables()-1;
-	}
+//	public int numberOfVariables() {
+//		return solution.getNumberOfVariables()-1;
+//	}
 
 	public void setStatus(int pos, boolean status) {
 		boolean[] statusArray = getStatusArray();
@@ -77,26 +84,26 @@ public class SensorsSolution{
 		return getStatusArray()[pos];
 	}
 	
-	public void setLocation(int pos, Location loc) {
-		EncodingUtils.setInt(solution.getVariable(1+pos*2), loc.getPosX());
-		EncodingUtils.setInt(solution.getVariable(1+pos*2+1), loc.getPosY());
-	}
+//	public void setLocation(int pos, Location loc) {
+//		EncodingUtils.setInt(solution.getVariable(1+pos*2), loc.getPosX());
+//		EncodingUtils.setInt(solution.getVariable(1+pos*2+1), loc.getPosY());
+//	}
 	
-	public static Location[] generateArray(Solution solution){
-		boolean status[] = EncodingUtils.getBinary(solution.getVariable(0));
-		int alleleLength = status.length;
-		Location[] locations = new Location[alleleLength];
-		int i = 0;
-		for(int j=1; j<=alleleLength*2; j=j+2) {
-			locations[i] = null;
-			if(status[i]) {
-				int xLoc = EncodingUtils.getInt(solution.getVariable(j));
-				int yLoc = EncodingUtils.getInt(solution.getVariable(j+1));
-				Location loc = new Location(xLoc, yLoc);
-				locations[i] = loc;
-			}
-			i++;
-		}
-		return locations;
-	}
+//	public static Location[] generateArray(Solution solution){
+//		boolean status[] = EncodingUtils.getBinary(solution.getVariable(0));
+//		int alleleLength = status.length;
+//		Location[] locations = new Location[alleleLength];
+//		int i = 0;
+//		for(int j=1; j<=alleleLength*2; j=j+2) {
+//			locations[i] = null;
+//			if(status[i]) {
+//				int xLoc = EncodingUtils.getInt(solution.getVariable(j));
+//				int yLoc = EncodingUtils.getInt(solution.getVariable(j+1));
+//				Location loc = new Location(xLoc, yLoc);
+//				locations[i] = loc;
+//			}
+//			i++;
+//		}
+//		return locations;
+//	}
 }

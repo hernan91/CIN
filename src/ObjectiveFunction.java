@@ -26,7 +26,7 @@ public class ObjectiveFunction{
 	//private int deployedSensors;
 	
 	
-	public ObjectiveFunction(SensorsProblem problem) {
+	public ObjectiveFunction(SensorsProblem problem, SensorsSolution sensorsSolution) {
 		this.problem = problem;
 		this.sfDim = this.problem.getSfDimensions();
 		this.sensingRadius = this.problem.getsInf().getSensingRadius();
@@ -37,11 +37,12 @@ public class ObjectiveFunction{
 		this.currentDistanceToHECN = 0;
 		this.coverage = 0;
 		this.energyPoints = this.problem.getEnergyPoints();
+		this.solution = sensorsSolution;
 		
 		//this.deployedSensors = this.solution.getNumberOfDeployedSensors();
 	}
 	
-	double[] sensorCoverageEnergy(SensorsSolution sensorsSolution) {
+	double[] sensorCoverageEnergy() {
 		//short[][] terrain = new short[sfDim.getGridSizeX()][sfDim.getGridSizeY()];
 		
 		double result[] = new double[2];

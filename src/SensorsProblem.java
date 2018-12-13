@@ -31,13 +31,7 @@ public class SensorsProblem implements Problem{
 	public Solution newSolution() {
 		Solution solution = new Solution(getNumberOfVariables(), getNumberOfObjectives(), getNumberOfConstraints());
 		solution.setVariable(0, EncodingUtils.newBinary(maxSensors));
-		for(int i=1; i<=getNumberOfVariables(); i=i+2) {
-			if(i==101) {
-				System.err.println("Hola");
-			}
-			solution.setVariable(i, EncodingUtils.newInt(0, sfDimensions.getGridSizeX()));
-			solution.setVariable(i+1, EncodingUtils.newInt(0, sfDimensions.getGridSizeY()));
-		}
+		solution.setVariable(1, new SensorsVar(getMaxSensors(), 0, sfDimensions.getGridSizeX(), 0, sfDimensions.getGridSizeY()));
 		return solution;
 	}
 	
@@ -46,8 +40,8 @@ public class SensorsProblem implements Problem{
 		SensorsSolution sensorsSolution = new SensorsSolution(solution);
 		// compute the active sensors
 		int numberOfDeployedSensors = sensorsSolution.getNumberOfDeployedSensors();
-		ObjectiveFunction objFunc = new ObjectiveFunction(this);
-		double[] coverageEnergy = objFunc.sensorCoverageEnergy(sensorsSolution);
+		ObjectiveFunction objFunc = new ObjectiveFunction(this, sensorsSolution);
+		double[] coverageEnergy = objFunc.sensorCoverageEnergy();
 
 		// uncovered region
 		double uncovered = coverageEnergy[0];
@@ -130,7 +124,7 @@ public class SensorsProblem implements Problem{
 
 	@Override
 	public int getNumberOfVariables() {
-		return getMaxSensors()*2+1;
+		return 2;
 	}
 
 	@Override
@@ -145,6 +139,6 @@ public class SensorsProblem implements Problem{
 
 	@Override
 	public void close() {
-		
+		System.err.println("Falta implementar close");
 	}
 }
