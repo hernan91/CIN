@@ -45,6 +45,7 @@ public class SensorsProblem implements Problem{
 	
 	@Override
 	public void evaluate(Solution sol) {
+		System.out.println("Holisss");
 		SensorsSolution solution = null;
 		try {
 			solution = (SensorsSolution) sol;
@@ -54,7 +55,7 @@ public class SensorsProblem implements Problem{
 			e.printStackTrace();
 			System.exit(0);
 		}
-		
+		System.out.println("Chauch");
 		SensorsInterface sensorsSolution = new SensorsInterface(solution);
 		// compute the active sensors
 		int numberOfDeployedSensors = sensorsSolution.getNumberOfDeployedSensors();
