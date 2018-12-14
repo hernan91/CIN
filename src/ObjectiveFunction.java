@@ -8,7 +8,7 @@ import jmetal.util.PseudoRandom;
 
 public class ObjectiveFunction{
 	private SensorsProblem problem;
-	private SensorsSolution solution;
+	private SensorsInterface solution;
 	private SensorsFieldDimensions sfDim;
 	private int sensingRadius;
 	private int commRadius;
@@ -26,7 +26,7 @@ public class ObjectiveFunction{
 	//private int deployedSensors;
 	
 	
-	public ObjectiveFunction(SensorsProblem problem, SensorsSolution sensorsSolution) {
+	public ObjectiveFunction(SensorsProblem problem, SensorsInterface sensorsSolution) {
 		this.problem = problem;
 		this.sfDim = this.problem.getSfDimensions();
 		this.sensingRadius = this.problem.getsInf().getSensingRadius();
@@ -317,7 +317,7 @@ public class ObjectiveFunction{
 		System.exit(-1);
 	} // evaluateConstraints
 
-	public int localImprovement(Solution solution, double threshold) {
+	public int localImprovement(SensorsSolution solution, double threshold) {
 		// First, evaluate the solution so as to initialize all the variables properly
 		// -> if evaluation is ensured before, this could be skipped
 		int evaluations = 0;
@@ -333,7 +333,7 @@ public class ObjectiveFunction{
 
 	}
 
-	public Pair<Integer, Boolean> changeOnePair(Solution sol, double threshold) {
+	public Pair<Integer, Boolean> changeOnePair(SensorsSolution sol, double threshold) {
 
 		// First, evaluate the solution so as to initialize all the variables properly
 		// -> if evaluation is ensured before, this could be skipped
@@ -341,9 +341,9 @@ public class ObjectiveFunction{
 		// already evaluated... this.evaluate(solution);
 		// DecisionVariables network = solution.getDecisionVariables();
 		boolean changed = false;
-		Solution rec = sol.deepCopy();
-		SensorsSolution recovery = new SensorsSolution(sol);
-		SensorsSolution solution = new SensorsSolution(sol);
+		SensorsSolution rec = sol.deepCopy();
+		SensorsInterface recovery = new SensorsInterface(sol);
+		SensorsInterface solution = new SensorsInterface(sol);
 
 		for (int i = 0; (i < solution.getNumberOfDeployeableSensors()) && !changed; i++) {
 			Sensor s = solution.getSensorsList().get(i);
@@ -427,7 +427,7 @@ public class ObjectiveFunction{
 		return p;
 	}
 
-	private boolean changeThisPair(Solution solution, int sensorA, int sensorB){
+	private boolean changeThisPair(SensorsSolution solution, int sensorA, int sensorB){
 		// initialize the new working terrain
 		short[][] workingTerrain = new short[sfDim.getGridSizeX()][sfDim.getGridSizeY()];
 		for (int i = 0; i < sfDim.getGridSizeX(); i++) {
@@ -438,7 +438,7 @@ public class ObjectiveFunction{
 
 		// idenfify all pairs of nodes with distance below threshold
 		// double threshold = 15.0;
-		ArrayList<Sensor> network = new SensorsSolution(solution).getSensorsList();
+		ArrayList<Sensor> network = new SensorsInterface(solution).getSensorsList();
 
 		boolean stageOneSucceeded = false;
 		boolean stageTwoSucceeded = false;

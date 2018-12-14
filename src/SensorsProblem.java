@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.moeaframework.core.Problem;
 import org.moeaframework.core.Solution;
@@ -29,15 +30,32 @@ public class SensorsProblem implements Problem{
 
 	@Override
 	public Solution newSolution() {
-		Solution solution = new Solution(getNumberOfVariables(), getNumberOfObjectives(), getNumberOfConstraints());
+		SensorsSolution solution = new SensorsSolution(getNumberOfVariables(), getNumberOfObjectives(), getNumberOfConstraints());
 		solution.setVariable(0, EncodingUtils.newBinary(maxSensors));
-		solution.setVariable(1, new SensorsVar(getMaxSensors(), 0, sfDimensions.getGridSizeX(), 0, sfDimensions.getGridSizeY()));
+		ArrayList<Location> arrayLocations = new ArrayList<>();
+		Random random = new Random();
+		for(int i=0; i<maxSensors; i++) {
+			int locX = random.nextInt(sfDimensions.getGridSizeX());
+			int locY = random.nextInt(sfDimensions.getGridSizeY());
+			arrayLocations.add(new Location(locX, locY));
+		}
+		solution.setLocationsList(arrayLocations);
 		return solution;
 	}
 	
 	@Override
-	public void evaluate(Solution solution) {
-		SensorsSolution sensorsSolution = new SensorsSolution(solution);
+	public void evaluate(Solution sol) {
+		SensorsSolution solution = null;
+		try {
+			solution = (SensorsSolution) sol;
+		}
+		catch(ClassCastException e) {
+			System.err.println("No se pudo castear la clase");
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		SensorsInterface sensorsSolution = new SensorsInterface(solution);
 		// compute the active sensors
 		int numberOfDeployedSensors = sensorsSolution.getNumberOfDeployedSensors();
 		ObjectiveFunction objFunc = new ObjectiveFunction(this, sensorsSolution);
@@ -124,7 +142,7 @@ public class SensorsProblem implements Problem{
 
 	@Override
 	public int getNumberOfVariables() {
-		return 2;
+		return 1;
 	}
 
 	@Override

@@ -1,109 +1,26 @@
 import java.util.ArrayList;
-
-/**
- * La estrategia a utilizar consiste en copiar todos los datos de las variables de solution (locations y statuses) y
- * pasarlos a un arrayList de sensores. Todas las modificaciones y los calculos se realizaran sobre el arraylist de
- * sensores. 
- * NOOOO. No se modifica la solucion, solo se evalua.
- * Cuando se requiera volcar los valores de las modificaciones en el campo, se lo hara con el método close().
- */
-
 import org.moeaframework.core.Solution;
-import org.moeaframework.core.variable.EncodingUtils;
 
-public class SensorsSolution{
-	private final Solution solution;
-	private ArrayList<Sensor> sensorsList;
+public class SensorsSolution extends Solution{
+	private static final long serialVersionUID = 1L;
+	private ArrayList<Location> locationsList;
 	
-	public SensorsSolution(Solution solution) {
-		this.solution = solution;
-		this.generateSensorsArrayList();
-	}
-	
-	//Hay que cambiarla para que tome 
-	private void generateSensorsArrayList(){
-		SensorsVar sensorsLocations = null;
-		try {
-			sensorsLocations = (SensorsVar) solution.getVariable(1);
-		}
-		catch(ClassCastException ex) {
-			System.err.println("No se pudo castear SensorsVar");
-			ex.printStackTrace();
-			System.exit(0);
-		}
-		ArrayList<Sensor> sensorsList = new ArrayList<>();
-		boolean[] statuses = EncodingUtils.getBinary(solution.getVariable(0));
-		Location[] locations = sensorsLocations.getLocations();
-		for(int i=0; i<statuses.length; i++) {
-			Sensor sensor = new Sensor(locations[i], statuses[i]);
-			sensorsList.add(sensor);
-		}
-		this.sensorsList = sensorsList;
-	}
-	
-	private boolean[] getStatusArray() {
-		return EncodingUtils.getBinary(solution.getVariable(0));
+	public SensorsSolution(int numberOfVariables, int numberOfObjectives, int numberOfConstraints) {
+		super(numberOfVariables, numberOfObjectives, numberOfConstraints);
 	}
 
-	public ArrayList<Sensor> getSensorsList() {
-		return sensorsList;
+	public ArrayList<Location> getLocationsList() {
+		return locationsList;
 	}
-	
-	public int getNumberOfDeployeableSensors() {
-		return getStatusArray().length;
-	}
-	
-	public int getNumberOfDeployedSensors() {
-		boolean statusArray[] = getStatusArray();
-		int numberOfDeployedSensors = 0;
-		for(boolean status: statusArray) {
-			if(status) numberOfDeployedSensors++;
-		}
-		return numberOfDeployedSensors;
-	}
-	
-	//Todos los indices se manejan como si fuese un array de Locations, se arranca en 0.
 
-//	public Location getLocation(int pos) {
-//		Integer posX = EncodingUtils.getInt(solution.getVariable(1+pos*2));
-//		Integer posY = EncodingUtils.getInt(solution.getVariable(1+pos*2+1));
-//		return new Location(posX, posY);
-//	}
-
-//	public int numberOfVariables() {
-//		return solution.getNumberOfVariables()-1;
-//	}
-
-	public void setStatus(int pos, boolean status) {
-		boolean[] statusArray = getStatusArray();
-		statusArray[pos] = status;
-		EncodingUtils.setBinary(solution.getVariable(0), statusArray);
+	public void setLocationsList(ArrayList<Location> locationsList) {
+		this.locationsList = locationsList;
 	}
 	
-	public boolean getStatus(int pos) { ;
-		return getStatusArray()[pos];
+	public SensorsSolution deepCopy() {
+		Solution sol = this.deepCopy();
+		SensorsSolution solution = (SensorsSolution) sol;
+		solution.setLocationsList(this.getLocationsList());
+		return solution;
 	}
-	
-//	public void setLocation(int pos, Location loc) {
-//		EncodingUtils.setInt(solution.getVariable(1+pos*2), loc.getPosX());
-//		EncodingUtils.setInt(solution.getVariable(1+pos*2+1), loc.getPosY());
-//	}
-	
-//	public static Location[] generateArray(Solution solution){
-//		boolean status[] = EncodingUtils.getBinary(solution.getVariable(0));
-//		int alleleLength = status.length;
-//		Location[] locations = new Location[alleleLength];
-//		int i = 0;
-//		for(int j=1; j<=alleleLength*2; j=j+2) {
-//			locations[i] = null;
-//			if(status[i]) {
-//				int xLoc = EncodingUtils.getInt(solution.getVariable(j));
-//				int yLoc = EncodingUtils.getInt(solution.getVariable(j+1));
-//				Location loc = new Location(xLoc, yLoc);
-//				locations[i] = loc;
-//			}
-//			i++;
-//		}
-//		return locations;
-//	}
 }
