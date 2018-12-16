@@ -9,6 +9,10 @@ public class SensorsSolution extends Solution{
 		super(numberOfVariables, numberOfObjectives, numberOfConstraints);
 	}
 
+	public SensorsSolution(Solution solution) {
+		super(solution);
+	}
+
 	public ArrayList<Location> getLocationsList() {
 		return locationsList;
 	}
@@ -22,5 +26,14 @@ public class SensorsSolution extends Solution{
 		SensorsSolution solution = (SensorsSolution) sol;
 		solution.setLocationsList(this.getLocationsList());
 		return solution;
+	}
+	
+	@Override
+	public SensorsSolution copy() {
+		Solution solution = super.copy();
+		SensorsSolution sensorsSolution = new SensorsSolution(solution);
+		sensorsSolution.setLocationsList(this.getLocationsList());
+		return sensorsSolution;
+		
 	}
 }

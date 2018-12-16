@@ -7,7 +7,7 @@ public class RunData {
 	 * En single core, si se le pone mas evaluaciones que popSize, entonces no se puede castear el attr. Parece que se pierde.
 	 * En multi thread, siempre se pierde el attr.
 	 */
-	static final int MAX_NUM_THREADS = 1;
+	static final int MAX_NUM_THREADS = 6;
 	static int maxEvaluations = 200; //10000 //
 	static float[] cpRates = {0.1f};//{0.1f, 0.3f, 0.5f, 0,7f, 0.9f};
 	static float[] mpRates = {0.1f};//{0.1f, 0.3f, 0.5f, 0,7f, 0.9f};
@@ -30,9 +30,9 @@ public class RunData {
 	//static SensorsFieldDimensions sfDim = new SensorsFieldDimensions(sensingRadius, sizeX, sizeY);
 	static Location hecnLocation = new Location(30, 30);
 	
-	static List<String> algNames = List.of("SPEA2", "NSGAII", "MOCell");//, 
+	static List<String> algNames = List.of("SPEA2", "NSGAII");// , "MOCell"
 	static SensorInformation sInf = new SensorInformation(energyRadius, sensingRadius, commRadius);
 	
-	static String everyTimeOutPutDataDir = "/home/hernan/Documentos/CIN/SalidaPruebas";
-	static String thisTimeDirName = "/prueba1";
+	static String baseOutPutDir = "/home/hernan/Documentos/CIN/SalidaPruebas";
+	static String filename = "prueba1";
 }

@@ -23,8 +23,6 @@ public class ThreadedExecutor implements Callable<ThreadOutputData> {
 	private float cpRate;
 	private float mpRate;
 	private String operators;
-	private String outputDirectory;
-	private String outPutfileName;
 	private float executionTimeInSeconds = 0;
 	
 	public ThreadedExecutor(int threadNum, String algName, float cpRate, float mpRate, Location gridSize, String operator) {
@@ -34,8 +32,6 @@ public class ThreadedExecutor implements Callable<ThreadOutputData> {
 		this.cpRate = cpRate;
 		this.mpRate = mpRate;
 		this.operators = operator;
-		this.outputDirectory = RunData.everyTimeOutPutDataDir+"/"+RunData.thisTimeDirName+"/"+"/"+sfDim.toString()+operator+"/"+"/"+threadNum;
-		this.outPutfileName = "/"+algName+"-"+cpRate+"-"+mpRate;
 	}
 	
 	
@@ -58,7 +54,7 @@ public class ThreadedExecutor implements Callable<ThreadOutputData> {
 		MetricResults statisticalResults = getStatisticalResults(pops);
 		if(statisticalResults!=null) {
 			List<Plot> plotList = getPlots(pops); 
-			ThreadOutputData threadOutputData = new ThreadOutputData(executionTimeInSeconds, operators, cpRate, mpRate, 
+			ThreadOutputData threadOutputData = new ThreadOutputData(algName, executionTimeInSeconds, operators, cpRate, mpRate, 
 					sfDim.getGridSizeX(), sfDim.getGridSizeY(), statisticalResults, plotList);
 			return threadOutputData;
 		}
@@ -129,59 +125,59 @@ public class ThreadedExecutor implements Callable<ThreadOutputData> {
 	
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public void writeRunGeneralData() {
-		FileWriter fileWriter = null;
-		File dir = new File(RunData.everyTimeOutPutDataDir);
-		try {
-			dir.mkdirs();
-			fileWriter = new FileWriter(new File(dir.getAbsolutePath(), "runGeneralData"+".html"));
-			fileWriter.append("<table><thead><h4>Datos adicionales del problema</h4></thead><tbody><tr><th>HecnLocation</th><td>"+RunData.hecnLocation.toString()+"</td></tr><tr><th>Energy radius</th><td>"+RunData.sInf.getEnergyRadius()+"</td></tr><tr><th>Sensing radius</th><td>"+RunData.sInf.getSensingRadius()+"</td></tr><tr><th>Communication radius</th><td>"+RunData.sInf.getCommRadius()+"</td></tr><tr><th>Número máximo de sensores</th><td>"+RunData.maxSensors+"</td></tr></tbody></table><table><thead><h4>Datos adicionales del algoritmo</h4></thead><tbody><tr><th>Tamaño de la población</th><td>"+RunData.popSize+"</td></tr><tr><th>Numero de semillas</th><td>"+RunData.numberOfSeeds+"</td></tr></tbody></table>");
-			fileWriter.append("<style>table, th, td { border: 1px solid black; border-collapse: collapse;}th, td { padding: 5px; text-align: left;}");
-		
-		} catch (Exception e) {
-			System.out.println("Error");
-			e.printStackTrace();
-		} finally {
-			try {
-				fileWriter.flush();
-				fileWriter.close();
-			} catch (IOException e) {
-				System.out.println("Error while flushing/closing fileWriter !!!");
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public void copyFile(String inputDir, String outPutDir) {
-		Path outputPath = Paths.get(outPutDir);
-		File inputFile = new File(inputDir);
-	    Path inputPath = inputFile.toPath();
-	    try {
-			Files.copy(inputPath, outputPath, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			System.err.println("No se pudo copiar el archivo");
-			e.printStackTrace();
-		}
-	}
-	
-	public void sendThisThreadMetrics(List<NondominatedPopulation> pops) {
-		copyFile("templates/dataTemplate.html", outputDirectory+"/"+threadNum+".html");
-		File threadFile = new File(outputDirectory+"/"+threadNum+".html");
-		FileWriter threadFileWriter = null;
-		boolean enaughPops = hasEnoughNondominatedSolutionsInEveryPop(pops);
-		Analyzer analyzer = new Analyzer()
-				.includeAllMetrics()
-				.showStatisticalSignificance()
-				.withProblemClass(SensorsProblem.class, sfDim, RunData.hecnLocation, RunData.energyPoints, RunData.sInf, RunData.maxSensors);
-		try {
-			threadFile.mkdirs();
-			threadFileWriter = new FileWriter(threadFile);
-			threadFileWriter.append("");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public void writeRunGeneralData() {
+//		FileWriter fileWriter = null;
+//		File dir = new File(RunData.everyTimeOutPutDataDir);
+//		try {
+//			dir.mkdirs();
+//			fileWriter = new FileWriter(new File(dir.getAbsolutePath(), "runGeneralData"+".html"));
+//			fileWriter.append("<table><thead><h4>Datos adicionales del problema</h4></thead><tbody><tr><th>HecnLocation</th><td>"+RunData.hecnLocation.toString()+"</td></tr><tr><th>Energy radius</th><td>"+RunData.sInf.getEnergyRadius()+"</td></tr><tr><th>Sensing radius</th><td>"+RunData.sInf.getSensingRadius()+"</td></tr><tr><th>Communication radius</th><td>"+RunData.sInf.getCommRadius()+"</td></tr><tr><th>Número máximo de sensores</th><td>"+RunData.maxSensors+"</td></tr></tbody></table><table><thead><h4>Datos adicionales del algoritmo</h4></thead><tbody><tr><th>Tamaño de la población</th><td>"+RunData.popSize+"</td></tr><tr><th>Numero de semillas</th><td>"+RunData.numberOfSeeds+"</td></tr></tbody></table>");
+//			fileWriter.append("<style>table, th, td { border: 1px solid black; border-collapse: collapse;}th, td { padding: 5px; text-align: left;}");
+//		
+//		} catch (Exception e) {
+//			System.out.println("Error");
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				fileWriter.flush();
+//				fileWriter.close();
+//			} catch (IOException e) {
+//				System.out.println("Error while flushing/closing fileWriter !!!");
+//				e.printStackTrace();
+//			}
+//		}
+//	}
+//	
+//	public void copyFile(String inputDir, String outPutDir) {
+//		Path outputPath = Paths.get(outPutDir);
+//		File inputFile = new File(inputDir);
+//	    Path inputPath = inputFile.toPath();
+//	    try {
+//			Files.copy(inputPath, outputPath, StandardCopyOption.REPLACE_EXISTING);
+//		} catch (IOException e) {
+//			System.err.println("No se pudo copiar el archivo");
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	public void sendThisThreadMetrics(List<NondominatedPopulation> pops) {
+//		copyFile("templates/dataTemplate.html", outputDirectory+"/"+threadNum+".html");
+//		File threadFile = new File(outputDirectory+"/"+threadNum+".html");
+//		FileWriter threadFileWriter = null;
+//		boolean enaughPops = hasEnoughNondominatedSolutionsInEveryPop(pops);
+//		Analyzer analyzer = new Analyzer()
+//				.includeAllMetrics()
+//				.showStatisticalSignificance()
+//				.withProblemClass(SensorsProblem.class, sfDim, RunData.hecnLocation, RunData.energyPoints, RunData.sInf, RunData.maxSensors);
+//		try {
+//			threadFile.mkdirs();
+//			threadFileWriter = new FileWriter(threadFile);
+//			threadFileWriter.append("");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 //	public void sendThisThreadMetrics(List<NondominatedPopulation> pops) {
 //		copyFile("templates/dataTemplate.html", outputDirectory+"/"+threadNum+".html");

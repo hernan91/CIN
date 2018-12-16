@@ -3,6 +3,7 @@ import java.util.List;
 import org.moeaframework.analysis.plot.Plot;
 
 public class ThreadOutputData {
+	private float algName;
 	private float duration;
 	private String operadores;
 	private float proporcionCruza;
@@ -12,7 +13,7 @@ public class ThreadOutputData {
 	private MetricResults metricsStatisticalResults;
 	private List<Plot> plotList;
 	
-	public ThreadOutputData(float duration, String operadores, float proporcionCruza, float proporcionMutacion, float gridSizeX,
+	public ThreadOutputData(String algName, float duration, String operadores, float proporcionCruza, float proporcionMutacion, float gridSizeX,
 			float girdSizeY, MetricResults statisticalResults, List<Plot> plotList) {
 		super();
 		this.duration = duration;
@@ -23,6 +24,14 @@ public class ThreadOutputData {
 		this.girdSizeY = girdSizeY;
 		this.metricsStatisticalResults = statisticalResults;
 		this.plotList = plotList;
+	}
+
+	public float getAlgName() {
+		return algName;
+	}
+
+	public void setAlgName(float algName) {
+		this.algName = algName;
 	}
 
 	public float getDuration() {
