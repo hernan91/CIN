@@ -2,9 +2,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,6 +64,9 @@ public class Runner {
 			executor.shutdown();
 			e.getMessage();
 		}
+		if(listOfThreadsResults.size()==0) {
+			System.err.println("No existen resultados por falta de soluciones no dominadas");
+		}
 		return listOfThreadsResults;
 	}
 	
@@ -76,11 +76,11 @@ public class Runner {
 	}
 	
 	public void writeRunStatisticsToCsv(ArrayList<ThreadOutputData> listOfOutputData) {
-		File dir = new File(outputDir+"/"+"DatosEstadisticos.csv");
+		File dir = new File(outputDir);
 		FileWriter fileWriter = null;
 		try {
-			dir.mkdirs();
-			fileWriter = new FileWriter(dir);
+			dir.getParentFile().mkdirs();
+			fileWriter = new FileWriter(new File(dir.getAbsolutePath()+"DatosEstadisticos.csv"));
 			fileWriter.append("Algname, GridSizeX, GridSizeY, Operadores, PropCruz, PropMut, Duracion, Metrica");
 			for(ThreadOutputData threadData : listOfOutputData) {
 				String metricName = threadData.getStatisticalResults().getName();
@@ -110,11 +110,13 @@ public class Runner {
 		}
 	}
 	
-	public String parseStatisticaResultsToCsv(HashMap<String, Float> statiscticalData) {
+	public String parseStatisticaResultsToCsv(HashMap<String, Float> statisticalData) {
 		String out = "";
-		statiscticalData.forEach((name, data)->{
-			out.concat(data.toString()+", ");
-		});
+		if(statisticalData!=null) {
+			statisticalData.forEach((name, data)->{
+				out.concat(data.toString()+", ");
+			});
+		}
 		return out.substring(0, out.length()-2);
 	}
 	

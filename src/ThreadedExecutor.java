@@ -72,6 +72,9 @@ public class ThreadedExecutor implements Callable<ThreadOutputData> {
 			if(pop.size()>=2) fullPops.add(pop);
 		}
 		if(fullPops.size()==0) return null;
+		//agregar todas las poblaciones no dominandas a una nueva instancia de la clase poblacion no dominada
+		//comprobar que esta tenga un tamaño mayor o igual a 2?
+		//agregarla al analizador si asi es, si no, retornal nulo
 		analyzer.addAll(Integer.toString(threadNum), fullPops);
 		AnalyzerResults results = analyzer.getAnalysis();
 		StringTokenizer lineTokenizer = new StringTokenizer(results.toString(), "\n");
