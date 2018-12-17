@@ -74,11 +74,11 @@ public class ThreadOutputData {
 		this.gridSizeX = gridSizeX;
 	}
 
-	public float getGirdSizeY() {
+	public float getGridSizeY() {
 		return girdSizeY;
 	}
 
-	public void setGirdSizeY(float girdSizeY) {
+	public void setGridSizeY(float girdSizeY) {
 		this.girdSizeY = girdSizeY;
 	}
 
@@ -88,14 +88,6 @@ public class ThreadOutputData {
 
 	public void setStatisticalResults(MetricResults statisticalResults) {
 		this.metricsStatisticalResults = statisticalResults;
-	}
-
-	public MetricResults getMetricsStatisticalResults() {
-		return metricsStatisticalResults;
-	}
-
-	public void setMetricsStatisticalResults(MetricResults metricsStatisticalResults) {
-		this.metricsStatisticalResults = metricsStatisticalResults;
 	}
 
 	public List<Plot> getPlotList() {

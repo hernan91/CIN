@@ -34,5 +34,4 @@ public class RunData {
 	static SensorInformation sInf = new SensorInformation(energyRadius, sensingRadius, commRadius);
 	
 	static String baseOutPutDir = "/home/hernan/Documentos/CIN/SalidaPruebas";
-	static String filename = "prueba1";
 }
