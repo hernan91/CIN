@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +12,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.moeaframework.Analyzer.AlgorithmResult;
+
 public class Runner {
 	private String outputDir;
 	
@@ -21,7 +22,7 @@ public class Runner {
 		Set<Callable<ThreadOutputData>> callables = getCallableThreadsList();
 		ArrayList<ThreadOutputData> allThreadsResults = getAllThreadResults(callables);
 		writeResults(allThreadsResults);
-		
+		java.awt.Toolkit.getDefaultToolkit().beep();
 	}
 	
 	public Set<Callable<ThreadOutputData>> getCallableThreadsList() {
@@ -80,11 +81,11 @@ public class Runner {
 		FileWriter fileWriter = null;
 		try {
 			dir.getParentFile().mkdirs();
-			fileWriter = new FileWriter(new File(dir.getAbsolutePath()+"DatosEstadisticos.csv"));
+			fileWriter = new FileWriter(new File(dir.getAbsolutePath()+"/"+"DatosEstadisticos.csv"));
 			fileWriter.append("Algname, GridSizeX, GridSizeY, Operadores, PropCruz, PropMut, Duracion, Metrica");
 			for(ThreadOutputData threadData : listOfOutputData) {
 				String metricName = threadData.getStatisticalResults().getName();
-				HashMap<String, Float> statiscticalData = threadData.getStatisticalResults().getStatistics();
+				AlgorithmResult statiscticalData = threadData.getStatisticalResults().
 				fileWriter.append(threadData.getAlgName()+ ","+
 						threadData.getGridSizeX()+ ","+
 						threadData.getGridSizeY()+ ","+
@@ -121,16 +122,24 @@ public class Runner {
 	}
 	
 	public void writeRunConfigToHtml() {
-		PrintWriter writer = null;
+		File dir = new File(outputDir);
+		FileWriter fileWriter = null;
 		try {
-			writer = new PrintWriter(outputDir+"/"+"Config.html", "UTF-8");
-			writer.println("<table><thead><h4>Datos adicionales del problema</h4></thead><tbody><tr><th>HecnLocation</th><td>"+RunData.hecnLocation.toString()+"</td></tr><tr><th>Energy radius</th><td>"+RunData.sInf.getEnergyRadius()+"</td></tr><tr><th>Sensing radius</th><td>"+RunData.sInf.getSensingRadius()+"</td></tr><tr><th>Communication radius</th><td>"+RunData.sInf.getCommRadius()+"</td></tr><tr><th>Número máximo de sensores</th><td>"+RunData.maxSensors+"</td></tr></tbody></table><table><thead><h4>Datos adicionales del algoritmo</h4></thead><tbody><tr><th>Tamaño de la población</th><td>"+RunData.popSize+"</td></tr><tr><th>Numero de semillas</th><td>"+RunData.numberOfSeeds+"</td></tr></tbody></table>");
-			writer.println("<style>table, th, td { border: 1px solid black; border-collapse: collapse;}th, td { padding: 5px; text-align: left;}");		
+			dir.mkdirs();
+			fileWriter = new FileWriter(new File(dir.getAbsolutePath()+"/"+"Config.html"));
+			fileWriter.append("<table><thead><h4>Datos adicionales del problema</h4></thead><tbody><tr><th>HecnLocation</th><td>"+RunData.hecnLocation.toString()+"</td></tr><tr><th>Energy radius</th><td>"+RunData.sInf.getEnergyRadius()+"</td></tr><tr><th>Sensing radius</th><td>"+RunData.sInf.getSensingRadius()+"</td></tr><tr><th>Communication radius</th><td>"+RunData.sInf.getCommRadius()+"</td></tr><tr><th>Número máximo de sensores</th><td>"+RunData.maxSensors+"</td></tr></tbody></table><table><thead><h4>Datos adicionales del algoritmo</h4></thead><tbody><tr><th>Tamaño de la población</th><td>"+RunData.popSize+"</td></tr><tr><th>Numero de semillas</th><td>"+RunData.numberOfSeeds+"</td></tr></tbody></table>");
+			fileWriter.append("<style>table, th, td { border: 1px solid black; border-collapse: collapse;}th, td { padding: 5px; text-align: left;}");		
 		} catch (Exception e) {
 			System.out.println("Error");
 			e.printStackTrace();
 		} finally {
-			writer.close();
+			try {
+				fileWriter.flush();
+				fileWriter.close();
+			} catch (IOException e) {
+				System.out.println("Error while flushing/closing fileWriter !!!");
+				e.printStackTrace();
+			}
 		}
 	}
 	

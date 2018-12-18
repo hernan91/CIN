@@ -1,20 +1,17 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Callable;
 
 import org.moeaframework.Analyzer;
+import org.moeaframework.Analyzer.AlgorithmResult;
 import org.moeaframework.Analyzer.AnalyzerResults;
+import org.moeaframework.Analyzer.IndicatorResult;
 import org.moeaframework.Executor;
 import org.moeaframework.analysis.plot.Plot;
 import org.moeaframework.core.NondominatedPopulation;
+import org.moeaframework.core.Solution;
+import org.moeaframework.core.comparator.ParetoDominanceComparator;
 
 public class ThreadedExecutor implements Callable<ThreadOutputData> {
 	private int threadNum;
@@ -51,7 +48,7 @@ public class ThreadedExecutor implements Callable<ThreadOutputData> {
 		List<NondominatedPopulation> pops = executor.runSeeds(RunData.numberOfSeeds);
 		long endTime = System.nanoTime();
 		executionTimeInSeconds = (endTime - startTime)/1000000000f;  //divide by 1000000000 to get seconds.
-		MetricResults statisticalResults = getStatisticalResults(pops);
+		AlgorithmResult statisticalResults = getStatisticalResults(pops);
 		if(statisticalResults!=null) {
 			List<Plot> plotList = getPlots(pops); 
 			ThreadOutputData threadOutputData = new ThreadOutputData(algName, executionTimeInSeconds, operators, cpRate, mpRate, 
@@ -64,39 +61,29 @@ public class ThreadedExecutor implements Callable<ThreadOutputData> {
 		}
 	}
 	
-	private MetricResults getStatisticalResults(List<NondominatedPopulation> pops) {
+	private AlgorithmResult getStatisticalResults(List<NondominatedPopulation> pops) {
 		MetricResults metricResults = new MetricResults();
-		Analyzer analyzer = getAnalyzerWithConfig();
-		ArrayList<NondominatedPopulation> fullPops = new ArrayList<>();
+ 		Analyzer analyzer = getAnalyzerWithConfig();
+		NondominatedPopulation fullPops = new NondominatedPopulation();
 		for(NondominatedPopulation pop: pops) {
-			if(pop.size()>=2) fullPops.add(pop);
+			fullPops.addAll(pop);
 		}
-		if(fullPops.size()==0) return null;
-		//agregar todas las poblaciones no dominandas a una nueva instancia de la clase poblacion no dominada
-		//comprobar que esta tenga un tamaño mayor o igual a 2?
-		//agregarla al analizador si asi es, si no, retornal nulo
-		analyzer.addAll(Integer.toString(threadNum), fullPops);
+		System.out.println("El tamaño de la fullPops es "+fullPops.size());
+		if(fullPops.size()<2) return null;
+		analyzer.add(Integer.toString(threadNum), fullPops);
 		AnalyzerResults results = analyzer.getAnalysis();
-		StringTokenizer lineTokenizer = new StringTokenizer(results.toString(), "\n");
-		boolean firstLine = true;
-		while(lineTokenizer.hasMoreTokens()) {
-			String line = lineTokenizer.nextToken();
-			if(firstLine) {
-				String[] data = line.split(":");
-				metricResults.setName(data[0]);
-				System.out.println("Nombre de la metrica: "+data[0]);
-				firstLine = false;
-			}
-			else {
-				String[] data = line.split(":");
-				String name = data[0];
-				Float value = Float.parseFloat(data[1]);
-				metricResults.setStatistic(name, value);
-				System.out.println("Dato de la metrica: "+data[0]);
-				System.out.println("Valor de la metrica "+data[1]);
-			}
-		}
-		return metricResults;
+		return results.get(algName);
+//		for(String algName : RunData.algNames) {
+//			AlgorithmResult algRes = results.get(algName);
+//			for(String ind: algRes.getIndicators()) {
+//				IndicatorResult indRes = algRes.get(ind);
+//				System.out.println("Indicator: "+indRes.getIndicator());
+//				System.out.println("Count: "+indRes.getCount());
+//				for(double value: indRes.getValues()) {
+//					System.out.println(value);
+//				}
+//			}
+//		}
 	}
 
 

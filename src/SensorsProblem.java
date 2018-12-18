@@ -71,7 +71,7 @@ public class SensorsProblem implements Problem{
 		// compute and set constraints
 		//double[] constraint = new double[this.getNumberOfConstraints()];
 
-		uncovered = -uncovered;
+		//uncovered = -uncovered;
 
 //		double total = 0.0;
 //		int number = 0;
@@ -82,7 +82,7 @@ public class SensorsProblem implements Problem{
 //			}
 //		}
 		
-		solution.setConstraint(0, uncovered);
+		solution.setConstraint(0, -uncovered);
 			
 		//ESTO IBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa
 		//solution.setOverallConstraintViolation(total);

@@ -1,5 +1,6 @@
 import java.util.List;
 
+import org.moeaframework.Analyzer.AlgorithmResult;
 import org.moeaframework.analysis.plot.Plot;
 
 public class ThreadOutputData {
@@ -10,11 +11,11 @@ public class ThreadOutputData {
 	private float proporcionMutacion;
 	private float gridSizeX;
 	private float girdSizeY;
-	private MetricResults metricsStatisticalResults;
+	private AlgorithmResult metricsStatisticalResults;
 	private List<Plot> plotList;
 	
 	public ThreadOutputData(String algName, float duration, String operadores, float proporcionCruza, float proporcionMutacion, float gridSizeX,
-			float girdSizeY, MetricResults statisticalResults, List<Plot> plotList) {
+			float girdSizeY, AlgorithmResult statisticalResults, List<Plot> plotList) {
 		super();
 		this.duration = duration;
 		this.operadores = operadores;
@@ -82,11 +83,11 @@ public class ThreadOutputData {
 		this.girdSizeY = girdSizeY;
 	}
 
-	public MetricResults getStatisticalResults() {
+	public AlgorithmResult getStatisticalResults() {
 		return metricsStatisticalResults;
 	}
 
-	public void setStatisticalResults(MetricResults statisticalResults) {
+	public void setStatisticalResults(AlgorithmResult statisticalResults) {
 		this.metricsStatisticalResults = statisticalResults;
 	}
 
